@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type, Modality, GenerateContentResponse } from "@google/genai";
 
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
@@ -18,7 +17,7 @@ export const consultHolisticDr = async (query: string) => {
   DISCLAIMER: Always start with a professional medical disclaimer stating this is for informational purposes only.`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-2.0-flash',
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }],
@@ -34,9 +33,8 @@ export const consultHolisticDr = async (query: string) => {
 export const askGeminiChat = async (message: string, history: { role: 'user' | 'model', parts: { text: string }[] }[] = []) => {
   const ai = getAI();
   const chat = ai.chats.create({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.0-pro-exp-02-05',
     config: {
-      thinkingConfig: { thinkingBudget: 32768 },
       systemInstruction: "You are an AI assistant for RTT (Rapid Transformational Therapy) practitioners. Provide expert advice on psychology, therapy techniques, and practice management. Use your deep reasoning capabilities for complex clinical questions.",
     }
   });
@@ -48,7 +46,7 @@ export const askGeminiChat = async (message: string, history: { role: 'user' | '
 export const researchTopic = async (topic: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-2.0-flash',
     contents: `Research the following topic in the context of psychological therapy and current events: ${topic}`,
     config: {
       tools: [{ googleSearch: {} }],
@@ -64,16 +62,13 @@ export const researchTopic = async (topic: string) => {
 export const analyzeVideoSession = async (videoBase64: string, mimeType: string, prompt: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.0-pro-exp-02-05',
     contents: {
       parts: [
         { inlineData: { data: videoBase64, mimeType } },
         { text: prompt }
       ]
     },
-    config: {
-      thinkingConfig: { thinkingBudget: 32768 },
-    }
   });
   return response.text;
 };
@@ -81,7 +76,7 @@ export const analyzeVideoSession = async (videoBase64: string, mimeType: string,
 export const generateReframes = async (limitingBeliefs: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-2.0-flash',
     contents: `As an RTT (Rapid Transformational Therapy) expert, reframe the following limiting beliefs into powerful, commanding, and positive affirmations for a transformation script. 
     Focus on:
     1. Being present tense.
@@ -126,7 +121,7 @@ export const generateHolisticReading = async (type: 'tarot' | 'astrology' | 'cha
   Format the response as a JSON object with a title, a summary, and a list of components.`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-2.0-flash',
     contents: prompt,
     config: {
       responseMimeType: "application/json",
@@ -169,10 +164,9 @@ export const generateFullScript = async (clientName: string, issue: string, refr
   Incorporate these specific reframes: ${reframes.join(", ")}.`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.0-pro-exp-02-05',
     contents: prompt,
     config: {
-      thinkingConfig: { thinkingBudget: 32768 },
       temperature: 0.8,
     }
   });
@@ -183,7 +177,7 @@ export const generateFullScript = async (clientName: string, issue: string, refr
 export const textToSpeech = async (text: string, voiceName: 'Kore' | 'Puck' | 'Charon' | 'Fenrir' | 'Zephyr' = 'Kore') => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash-preview-tts",
+    model: "gemini-2.0-flash-exp",
     contents: [{ parts: [{ text }] }],
     config: {
       responseModalities: [Modality.AUDIO],
