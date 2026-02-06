@@ -1,0 +1,9 @@
+
+{
+  "name": "RTT Companion Pro",
+  "description": "A professional suite for Rapid Transformational Therapy practitioners to manage clients, generate AI-powered reframes, and produce custom hypnosis scripts and audio.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
